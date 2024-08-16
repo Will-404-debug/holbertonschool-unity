@@ -7,3 +7,5 @@ This project, `unity_concepts`, is a demonstration of fundamental concepts in Un
 - **Assets/Scenes/**: Contains all Unity scenes.
 - **Assets/Materials/**: Contains all materials used in the scenes.
 - **ProjectSettings/**: Unity project settings.
+
+:)
