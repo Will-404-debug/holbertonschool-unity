@@ -1540,7 +1540,18 @@ MonoBehaviour:
   player: {fileID: 278090441}
   offset: {x: 0, y: 2.5, z: -6.25}
   rotationSpeed: 2
-  requireRightClick: 0
+  requireRightClick: 1
+  minZoom: 3
+  maxZoom: 10
+  zoomSpeed: 2
+  smoothSpeed: 0.1
+  collisionLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  cameraCollisionRadius: 0.2
+  enableAutoOrbit: 1
+  idleTime: 30
+  autoOrbitSpeed: 10
 --- !u!1 &1021958776
 GameObject:
   m_ObjectHideFlags: 0
