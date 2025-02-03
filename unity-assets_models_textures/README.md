@@ -16,3 +16,8 @@ In modern game development, codebases and asset libraries are continually evolvi
 Skyboxes used in this project:  
 **Farland Skies - Cloudy Crown**  
 [Download from Unity Asset Store](https://assetstore.unity.com/packages/2d/textures-materials/sky/farland-skies-cloudy-crown-60432)
+
+## Models
+Models used in this project:  
+**Kenney's Nature Pack Extended**  
+[Download from Kenney](https://kenney.nl/assets/nature-pack-extended)
