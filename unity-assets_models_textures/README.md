@@ -11,3 +11,8 @@ In modern game development, codebases and asset libraries are continually evolvi
 - Teaching you the process of importing and managing various asset types (models, textures, materials, skyboxes).
 - Providing practical experience with Unity’s built-in components such as Character Controllers.
 - Introducing essential 3D concepts like Quaternions and Euler Angles for rotation management.
+
+## Skyboxes
+Skyboxes used in this project:  
+**Farland Skies - Cloudy Crown**  
+[Download from Unity Asset Store](https://assetstore.unity.com/packages/2d/textures-materials/sky/farland-skies-cloudy-crown-60432)
