@@ -4,49 +4,51 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    public Transform player; // Reference to the Player
-    public Vector3 offset = new Vector3(0, 2.5f, -6.25f); // Default Camera offset
+    public Transform player;
+    public Vector3 offset = new Vector3(0, 2.5f, -6.25f);
+    
+    private Vector3 startPosition; // Store camera's initial position
+    private Quaternion startRotation; // Store camera's initial rotation
 
     [Header("Camera Rotation Settings")]
-    public float rotationSpeed = 3.0f;  // Mouse sensitivity
-    public bool requireRightClick = false; // Hold right-click to rotate camera
-
-    private float pitch = 0f; // Up/down rotation (X-axis)
-    private float yaw = 0f;   // Left/right rotation (Y-axis)
-    private float lastMouseMovementTime = 0f; // Track last mouse movement
-    private float lastPlayerMovementTime = 0f; // Track last player movement
+    public float rotationSpeed = 3.0f;
+    public bool requireRightClick = false;
+    private float pitch = 0f;
+    private float yaw = 0f;
 
     [Header("Zoom Settings")]
-    public float minZoom = 3f;   // Minimum zoom distance
-    public float maxZoom = 10f;  // Maximum zoom distance
-    public float zoomSpeed = 2f; // Speed of zooming
-    private float currentZoom;   // Holds the current zoom level
+    public float minZoom = 3f;
+    public float maxZoom = 10f;
+    public float zoomSpeed = 2f;
+    private float currentZoom;
 
     [Header("Smoothing Settings")]
-    public float smoothSpeed = 0.1f; // Smoothing factor for camera movement
+    public float smoothSpeed = 0.1f;
 
     [Header("Camera Collision Detection")]
-    public LayerMask collisionLayers; // Layers to detect camera collision
-    public float cameraCollisionRadius = 0.2f; // Radius for collision detection
+    public LayerMask collisionLayers;
+    public float cameraCollisionRadius = 0.2f;
 
     [Header("Auto Orbit Settings")]
-    public bool enableAutoOrbit = true; // Toggle auto orbit feature
-    public float idleTime = 5f; // Time before auto orbit activates
-    public float autoOrbitSpeed = 10f; // Rotation speed when orbiting
+    public bool enableAutoOrbit = true;
+    public float idleTime = 5f;
+    public float autoOrbitSpeed = 10f;
 
-    private Vector3 desiredPosition; // Target position for smoothing
-    private bool isIdle = false; // Track if camera is in idle mode
-
-    private Rigidbody playerRb; // Reference to player's Rigidbody
+    private Vector3 desiredPosition;
+    private bool isIdle = false;
+    private Rigidbody playerRb;
+    private float lastPlayerMovementTime = 0f;
+    private float lastMouseMovementTime = 0f;
 
     void Start()
     {
-        currentZoom = Mathf.Abs(offset.z); // Set initial zoom distance
+        currentZoom = Mathf.Abs(offset.z);
         yaw = transform.eulerAngles.y;
         pitch = transform.eulerAngles.x;
-
-        // Get the player's Rigidbody for movement detection
         playerRb = player.GetComponent<Rigidbody>();
+
+        startPosition = transform.position; // Save camera start position
+        startRotation = transform.rotation; // Save camera start rotation
     }
 
     void LateUpdate()
@@ -62,15 +64,15 @@ public class CameraController : MonoBehaviour
         offset = new Vector3(offset.x, offset.y, -currentZoom);
 
         // Detect Player Movement
-        if (playerRb.velocity.magnitude > 0.1f) // Check if player is moving
+        if (playerRb.velocity.magnitude > 0.1f)
         {
-            lastPlayerMovementTime = Time.time; // Reset idle timer
+            lastPlayerMovementTime = Time.time;
             isIdle = false;
         }
 
-        // Camera Rotation Logic
+        // Camera Rotation
         bool isRotating = false;
-        if (!requireRightClick || Input.GetMouseButton(1)) // Free rotation OR right-click hold
+        if (!requireRightClick || Input.GetMouseButton(1))
         {
             float mouseX = Input.GetAxis("Mouse X") * rotationSpeed;
             float mouseY = Input.GetAxis("Mouse Y") * rotationSpeed;
@@ -79,24 +81,22 @@ public class CameraController : MonoBehaviour
             {
                 yaw += mouseX;
                 pitch -= mouseY;
-                lastMouseMovementTime = Time.time; // Reset idle timer
+                lastMouseMovementTime = Time.time;
                 isIdle = false;
                 isRotating = true;
             }
 
-            pitch = Mathf.Clamp(pitch, -30f, 60f); // Prevent extreme up/down rotation
+            pitch = Mathf.Clamp(pitch, -30f, 60f);
         }
 
-        // Auto Orbit Logic (if player is idle)
+        // Auto Orbit if Idle
         if (enableAutoOrbit && !isRotating)
         {
-            // Only activate idle mode if the player and mouse are idle
             if (Time.time - lastMouseMovementTime > idleTime && Time.time - lastPlayerMovementTime > idleTime)
             {
                 isIdle = true;
             }
 
-            // If idle, slowly orbit around the player
             if (isIdle)
             {
                 yaw += autoOrbitSpeed * Time.deltaTime;
@@ -123,13 +123,17 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    // Function to Reset Camera Position
-    void ResetCamera()
+    // Reset Camera Position when Player Respawns
+    public void ResetCamera()
     {
-        yaw = player.eulerAngles.y; // Reset yaw to player's direction
-        pitch = 10f; // Slight downward angle
+        yaw = player.eulerAngles.y;
+        pitch = 10f;
         isIdle = false;
-        lastMouseMovementTime = Time.time; // Reset idle timer
+        lastMouseMovementTime = Time.time;
         lastPlayerMovementTime = Time.time;
+
+        // Move Camera to Start Position
+        transform.position = startPosition;
+        transform.rotation = startRotation;
     }
 }

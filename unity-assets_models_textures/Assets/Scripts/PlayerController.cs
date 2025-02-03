@@ -9,28 +9,38 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     private bool isGrounded;
 
+    private Vector3 startPosition; // Store the player's starting position
+    private float fallThreshold = -10f; // Y-position where the player is considered "falling"
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        startPosition = transform.position; // Store the starting position
     }
 
     void Update()
     {
         // Get input from WASD keys
-        float moveX = Input.GetAxis("Horizontal"); // A (-1) to D (1)
-        float moveZ = Input.GetAxis("Vertical");   // S (-1) to W (1)
+        float moveX = Input.GetAxis("Horizontal");
+        float moveZ = Input.GetAxis("Vertical");
 
-        // Create movement direction vector
+        // Create movement vector
         Vector3 movement = new Vector3(moveX, 0, moveZ) * speed * Time.deltaTime;
 
-        // Apply movement to transform
+        // Apply movement
         transform.Translate(movement, Space.Self);
 
-        // Jump logic
+        // Jumping logic
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            isGrounded = false; // Prevent multiple jumps
+            isGrounded = false;
+        }
+
+        // Check if the player has fallen
+        if (transform.position.y < fallThreshold)
+        {
+            Respawn();
         }
     }
 
@@ -41,5 +51,11 @@ public class PlayerController : MonoBehaviour
         {
             isGrounded = true;
         }
+    }
+
+    void Respawn()
+    {
+        transform.position = new Vector3(startPosition.x, startPosition.y + 5, startPosition.z); // Respawn above start position
+        rb.velocity = Vector3.zero; // Reset velocity to prevent falling again
     }
 }
