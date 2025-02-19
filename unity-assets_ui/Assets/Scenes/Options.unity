@@ -180,9 +180,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'SFX
-
-'
+  m_text: SFX
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a381f5cdcffd9304ebc56dcd7c195d9f, type: 2}
   m_sharedMaterial: {fileID: -8026768553896742560, guid: a381f5cdcffd9304ebc56dcd7c195d9f, type: 2}
