@@ -2,20 +2,24 @@ using UnityEngine;
 
 public class TimerTrigger : MonoBehaviour
 {
+    private bool hasTriggered = false;
+
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player")) // Check if Player exits the trigger
+        if (other.CompareTag("Player") && !hasTriggered)
         {
-            Timer playerTimer = other.GetComponent<Timer>();
+            Debug.Log("✅ Player exited the trigger - Starting Timer!");
+            Timer timer = FindObjectOfType<Timer>();
 
-            if (playerTimer != null)
+            if (timer != null)
             {
-                playerTimer.enabled = true; // Enable the Timer script
-                playerTimer.StartTimer(); // Start counting
-                Debug.Log("Timer Triggered!");
+                timer.StartTimer();
+                hasTriggered = true; // Ensure it only triggers once
             }
-
-            Destroy(gameObject); // Remove the trigger so it doesn’t trigger again
+            else
+            {
+                Debug.LogError("❌ ERROR: No Timer found in the scene!");
+            }
         }
     }
 }

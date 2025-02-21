@@ -1,27 +1,43 @@
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
 
 public class WinTrigger : MonoBehaviour
 {
-    public Timer playerTimer; // Reference to the Timer script
-    public Text timerText;    // Reference to the Timer UI Text
+    public GameObject winCanvas; // Reference to WinCanvas
+    public TextMeshProUGUI finalTimeText; // Reference to FinalTime UI in WinCanvas
+    public GameObject timerCanvas; // **Reference to Timer Canvas**
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player")) // Ensure only the player triggers this
+        if (other.CompareTag("Player"))
         {
-            if (playerTimer != null)
+            Debug.Log("🎉 Player Reached Goal! Displaying Win Screen...");
+
+            // Display Win Canvas
+            winCanvas.SetActive(true);
+            Time.timeScale = 0f; // Pause the game
+
+            // Hide the Timer Canvas
+            if (timerCanvas != null)
             {
-                playerTimer.StopTimer(); // Stop the timer
+                timerCanvas.SetActive(false);
+                Debug.Log("⏳ Timer UI Hidden.");
+            }
+            else
+            {
+                Debug.LogError("❌ ERROR: Timer Canvas not assigned in Inspector!");
             }
 
-            if (timerText != null)
+            // Stop the Timer & Display Final Time
+            Timer timer = FindObjectOfType<Timer>();
+            if (timer != null)
             {
-                timerText.fontSize = 60; // Increase font size
-                timerText.color = Color.green; // Change color to green
+                timer.Win(finalTimeText);
             }
-
-            Debug.Log("Player has reached the finish line!");
+            else
+            {
+                Debug.LogError("❌ ERROR: Timer not found in the scene!");
+            }
         }
     }
 }
