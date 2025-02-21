@@ -21,6 +21,9 @@ public class CameraController : MonoBehaviour
     public float maxZoom = 60f;
     public float zoomSmoothTime = 0.1f;
 
+    [Header("Y-Axis Inversion")]
+    public bool isInverted = false;
+
     [Header("Auto Orbit Settings")]
     public bool enableAutoOrbit = true;
     public float idleTime = 5f;
@@ -100,6 +103,12 @@ public class CameraController : MonoBehaviour
 
         float mouseX = Input.GetAxis("Mouse X") * (rotationSpeedX * 100) * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * rotationSpeedY * Time.deltaTime;
+
+        // **Invert Y-Axis if toggled**
+        if (isInverted)
+        {
+            mouseY *= -1; // Reverse vertical movement
+        }
 
         freeLookCamera.m_XAxis.Value += mouseX;
         freeLookCamera.m_YAxis.Value = Mathf.Clamp(freeLookCamera.m_YAxis.Value + mouseY, 0f, 1f);
