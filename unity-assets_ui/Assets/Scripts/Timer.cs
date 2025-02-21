@@ -31,12 +31,13 @@ public class Timer : MonoBehaviour
             this.enabled = true; // Ensure Update() runs
         }
     }
-    
+
     public void StopTimer()
-{
-    isRunning = false; // Stop counting
-    Debug.Log("Timer Stopped!");
-}
+    {
+        isRunning = false; // Stop counting
+        this.enabled = false; // Disable Update() from running
+        Debug.Log("Timer Stopped!");
+    }
 
     // Updates the Timer UI text
     void UpdateTimerDisplay()
