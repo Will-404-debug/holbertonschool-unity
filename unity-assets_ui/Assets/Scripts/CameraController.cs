@@ -55,8 +55,8 @@ public class CameraController : MonoBehaviour
             }
         }
 
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        //Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = true;
 
         freeLookCamera.m_XAxis.m_InputAxisName = "";
         freeLookCamera.m_YAxis.m_InputAxisName = "";
