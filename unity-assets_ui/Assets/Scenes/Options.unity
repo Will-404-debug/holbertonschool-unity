@@ -2538,33 +2538,9 @@ PrefabInstance:
     m_TransformParent: {fileID: 1233282213}
     m_Modifications:
     - target: {fileID: 3811472101359494850, guid: b587fdce29feb634fbd83cd096f4f31e, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3811472101359494850, guid: b587fdce29feb634fbd83cd096f4f31e, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3811472101359494850, guid: b587fdce29feb634fbd83cd096f4f31e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1233282214}
-    - target: {fileID: 3811472101359494850, guid: b587fdce29feb634fbd83cd096f4f31e, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3811472101359494850, guid: b587fdce29feb634fbd83cd096f4f31e, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Back
-      objectReference: {fileID: 0}
-    - target: {fileID: 3811472101359494850, guid: b587fdce29feb634fbd83cd096f4f31e, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: OptionsMenu, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 3811472101359494850, guid: b587fdce29feb634fbd83cd096f4f31e, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
     - target: {fileID: 3811472101359494876, guid: b587fdce29feb634fbd83cd096f4f31e, type: 3}
       propertyPath: m_Name
       value: BackButton

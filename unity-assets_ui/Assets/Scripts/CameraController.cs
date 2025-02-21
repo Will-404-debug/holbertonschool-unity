@@ -1,142 +1,149 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class CameraController : MonoBehaviour
 {
-    public Transform player; // Reference to the Player
-    public Vector3 offset = new Vector3(0, 2.5f, -6.25f);
+    [Header("Camera & Player References")]
+    public CinemachineFreeLook freeLookCamera;
+    public Transform player;
 
-    private Vector3 startPosition; // Store camera's initial position
-    private Quaternion startRotation; // Store camera's initial rotation
-
-    [Header("Camera Rotation Settings")]
-    public float rotationSpeed = 3.0f;
-    public bool requireRightClick = false;
-    private float pitch = 0f;
-    private float yaw = 0f;
+    [Header("Rotation Settings")]
+    public bool requireRightClick = true;
+    public float rotationSpeed = 300f;
+    public float playerRotationSpeed = 5f;
+    public float rotationSpeedX = 0.1f;
+    public float rotationSpeedY = 0.1f;
+    public float cameraSmoothTime = 0.1f;
 
     [Header("Zoom Settings")]
-    public float minZoom = 3f;
-    public float maxZoom = 10f;
     public float zoomSpeed = 2f;
-    private float currentZoom;
-
-    [Header("Smoothing Settings")]
-    public float smoothSpeed = 0.1f;
-
-    [Header("Camera Collision Detection")]
-    public LayerMask collisionLayers;
-    public float cameraCollisionRadius = 0.2f;
+    public float minZoom = 30f;
+    public float maxZoom = 60f;
+    public float zoomSmoothTime = 0.1f;
 
     [Header("Auto Orbit Settings")]
     public bool enableAutoOrbit = true;
     public float idleTime = 5f;
-    public float autoOrbitSpeed = 10f;
+    public float autoOrbitSpeed = 0.2f;
 
-    private Vector3 desiredPosition;
-    private bool isIdle = false;
-    private Rigidbody playerRb;
-    private float lastPlayerMovementTime = 0f;
-    private float lastMouseMovementTime = 0f;
+    private float lastInputTime;
+    private bool isRotating = false;
+    private float zoomVelocity = 0f;
+    private Vector3 lastMousePosition;
 
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked; // Lock cursor to center
-        Cursor.visible = false; // Hide cursor for better control
+        if (freeLookCamera == null)
+        {
+            freeLookCamera = FindObjectOfType<CinemachineFreeLook>();
+            if (freeLookCamera == null)
+            {
+                Debug.LogError("❌ ERROR: No Cinemachine FreeLook Camera found!");
+                return;
+            }
+        }
 
-        currentZoom = Mathf.Abs(offset.z);
-        yaw = transform.eulerAngles.y;
-        pitch = transform.eulerAngles.x;
-        playerRb = player.GetComponent<Rigidbody>();
+        if (player == null)
+        {
+            GameObject foundPlayer = GameObject.FindWithTag("Player");
+            if (foundPlayer != null)
+                player = foundPlayer.transform;
+            else
+            {
+                Debug.LogError("❌ ERROR: No Player found!");
+                return;
+            }
+        }
 
-        startPosition = transform.position; // Save camera start position
-        startRotation = transform.rotation; // Save camera start rotation
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        freeLookCamera.m_XAxis.m_InputAxisName = "";
+        freeLookCamera.m_YAxis.m_InputAxisName = "";
     }
 
-    void LateUpdate()
+    void Update()
     {
-        if (player == null) return;
+        if (freeLookCamera == null || player == null) return;
 
-        // Handle Zoom (Mouse Scroll Wheel)
-        float scrollInput = Input.GetAxis("Mouse ScrollWheel");
-        currentZoom -= scrollInput * zoomSpeed;
-        currentZoom = Mathf.Clamp(currentZoom, minZoom, maxZoom);
-        offset = new Vector3(offset.x, offset.y, -currentZoom);
+        HandleZoom();
+        HandleRotation();
+        HandleAutoOrbit();
+        HandleCameraReset();
+    }
 
-        // Detect Player Movement
-        if (playerRb.velocity.magnitude > 0.1f)
+    private void HandleZoom()
+    {
+        float scrollInput = Input.GetAxis("Mouse ScrollWheel") * zoomSpeed;
+        float targetZoom = Mathf.Clamp(freeLookCamera.m_Lens.FieldOfView - scrollInput, minZoom, maxZoom);
+        
+        freeLookCamera.m_Lens.FieldOfView = Mathf.SmoothDamp(
+            freeLookCamera.m_Lens.FieldOfView, 
+            targetZoom, 
+            ref zoomVelocity, 
+            zoomSmoothTime
+        );
+    }
+
+    private void HandleRotation()
+    {
+        if (requireRightClick)
         {
-            lastPlayerMovementTime = Time.time;
-            isIdle = false;
-        }
-
-        // Camera Rotation & Player Rotation
-        bool isRotating = false;
-        if (!requireRightClick || Input.GetMouseButton(1))
-        {
-            float mouseX = Input.GetAxis("Mouse X") * rotationSpeed;
-            float mouseY = Input.GetAxis("Mouse Y") * rotationSpeed;
-
-            if (mouseX != 0 || mouseY != 0)
+            if (!Input.GetMouseButton(1))
             {
-                yaw += mouseX;
-                pitch -= mouseY;
-                lastMouseMovementTime = Time.time;
-                isIdle = false;
-                isRotating = true;
+                isRotating = false;
+                return;
             }
-
-            pitch = Mathf.Clamp(pitch, -30f, 60f);
-
-            // Rotate the player in the direction of the camera
-            player.rotation = Quaternion.Euler(0f, yaw, 0f);
+            isRotating = true;
+            lastInputTime = Time.time;
         }
 
-        // Auto Orbit if Idle
-        if (enableAutoOrbit && !isRotating)
+        float mouseX = Input.GetAxis("Mouse X") * (rotationSpeedX * 100) * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * rotationSpeedY * Time.deltaTime;
+
+        freeLookCamera.m_XAxis.Value += mouseX;
+        freeLookCamera.m_YAxis.Value = Mathf.Clamp(freeLookCamera.m_YAxis.Value + mouseY, 0f, 1f);
+
+        RotatePlayerToCamera();
+    }
+
+    private void RotatePlayerToCamera()
+    {
+        if (player == null || freeLookCamera == null) return;
+
+        Vector3 cameraForward = freeLookCamera.transform.forward;
+        cameraForward.y = 0;
+
+        if (cameraForward.magnitude <= 0.1f) return;
+
+        Quaternion targetRotation = Quaternion.LookRotation(cameraForward);
+
+        if (Quaternion.Angle(player.rotation, targetRotation) > 1f)
         {
-            if (Time.time - lastMouseMovementTime > idleTime && Time.time - lastPlayerMovementTime > idleTime)
-            {
-                isIdle = true;
-            }
-
-            if (isIdle)
-            {
-                yaw += autoOrbitSpeed * Time.deltaTime;
-                player.rotation = Quaternion.Euler(0f, yaw, 0f); // Rotate player with auto orbit
-            }
+            player.rotation = Quaternion.Slerp(player.rotation, targetRotation, Time.deltaTime * playerRotationSpeed);
         }
+    }
 
-        // Camera Collision Detection
-        Vector3 targetPosition = player.position + Quaternion.Euler(0, yaw, 0) * offset;
-        RaycastHit hit;
-        if (Physics.SphereCast(player.position, cameraCollisionRadius, offset.normalized, out hit, currentZoom, collisionLayers))
+    private void HandleAutoOrbit()
+    {
+        if (!enableAutoOrbit || isRotating || Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
         {
-            targetPosition = hit.point + hit.normal * cameraCollisionRadius;
+            return;
         }
 
-        // Smoothly move and rotate camera
-        transform.position = Vector3.Lerp(transform.position, targetPosition, smoothSpeed);
-        transform.LookAt(player.position + Vector3.up * 1.5f); // Adjust look height to be natural
+        if (Time.time - lastInputTime > idleTime)
+        {
+            freeLookCamera.m_XAxis.Value += autoOrbitSpeed;
+        }
+    }
 
-        // Camera Reset (Press "R" key)
+    private void HandleCameraReset()
+    {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            ResetCamera();
+            freeLookCamera.m_XAxis.Value = 0;
+            freeLookCamera.m_YAxis.Value = 0.5f;
+            RotatePlayerToCamera();
         }
-    }
-
-    // Reset Camera Position when Player Respawns
-    public void ResetCamera()
-    {
-        yaw = player.eulerAngles.y;
-        pitch = 10f;
-        isIdle = false;
-        lastMouseMovementTime = Time.time;
-        lastPlayerMovementTime = Time.time;
-
-        transform.position = startPosition;
-        transform.rotation = startRotation;
     }
 }
