@@ -5,17 +5,17 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>English</string>
     <key>CFBundleExecutable</key>
-    <string>unity-assets_models_textures</string>
+    <string>Platformer</string>
     <key>CFBundleGetInfoString</key>
     <string>Unity Player version 2021.3.45f1 (0da89fac8e79). (c) 2005-2024 Unity Technologies. All rights reserved.</string>
     <key>CFBundleIconFile</key>
     <string>PlayerIcon.icns</string>
     <key>CFBundleIdentifier</key>
-    <string>com.DefaultCompany.unity-assets-models-textures</string>
+    <string>com.Will-404-debug.Platformer</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
-    <string>unity-assets_models_textures</string>
+    <string>Platformer</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
