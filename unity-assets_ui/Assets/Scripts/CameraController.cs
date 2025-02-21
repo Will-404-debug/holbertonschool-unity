@@ -36,6 +36,9 @@ public class CameraController : MonoBehaviour
 
     void Start()
     {
+        // Load saved Y-axis inversion preference
+        isInverted = PlayerPrefs.GetInt("InvertY", 0) == 1;
+        
         if (freeLookCamera == null)
         {
             freeLookCamera = FindObjectOfType<CinemachineFreeLook>();

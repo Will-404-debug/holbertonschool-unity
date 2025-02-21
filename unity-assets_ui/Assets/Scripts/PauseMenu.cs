@@ -38,6 +38,15 @@ public class PauseMenu : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(resumeButton.gameObject); // Select Resume button for keyboard/controller users
     }
 
+    public void Options()
+    {
+        // Save the current scene before switching to options
+        PlayerPrefs.SetString("LastScene", SceneManager.GetActiveScene().name);
+        PlayerPrefs.Save();
+
+        SceneManager.LoadScene("Options");
+    }
+
     public void Resume()
     {
         pauseMenuUI.SetActive(false); // Hide Pause Menu

@@ -12,7 +12,9 @@ public class MainMenu : MonoBehaviour
     // Load the Options scene
     public void Options()
     {
-        PlayerPrefs.SetString("LastScene", SceneManager.GetActiveScene().name); // Save the current scene before switching
+        PlayerPrefs.SetString("LastScene", "MainMenu");
+        PlayerPrefs.Save();
+
         SceneManager.LoadScene("Options");
     }
 
