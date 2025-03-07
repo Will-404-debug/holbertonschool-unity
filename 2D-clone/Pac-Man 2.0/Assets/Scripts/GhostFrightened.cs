@@ -98,7 +98,8 @@ public class GhostFrightened : GhostBehavior
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Pacman"))
         {
-            if (enabled) {
+            if (enabled)
+            {
                 Eaten();
             }
         }

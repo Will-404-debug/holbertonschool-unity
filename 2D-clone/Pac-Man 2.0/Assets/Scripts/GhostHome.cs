@@ -14,7 +14,8 @@ public class GhostHome : GhostBehavior
     private void OnDisable()
     {
         // Check for active self to prevent error when object is destroyed
-        if (gameObject.activeInHierarchy) {
+        if (gameObject.activeInHierarchy)
+        {
             StartCoroutine(ExitTransition());
         }
     }
@@ -23,7 +24,8 @@ public class GhostHome : GhostBehavior
     {
         // Reverse direction everytime the ghost hits a wall to create the
         // effect of the ghost bouncing around the home
-        if (enabled && collision.gameObject.layer == LayerMask.NameToLayer("Obstacle")) {
+        if (enabled && collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
+        {
             ghost.movement.SetDirection(-ghost.movement.direction);
         }
     }
