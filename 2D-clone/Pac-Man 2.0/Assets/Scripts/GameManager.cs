@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 [DefaultExecutionOrder(-100)]
 public class GameManager : MonoBehaviour
@@ -16,13 +17,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI gameOverText;
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI livesText;
-    [SerializeField] private TextMeshProUGUI readyText; // NEW: "READY!" text
-    [SerializeField] private GameObject livesPanel;  // Parent object for lives
-    [SerializeField] private GameObject lifeIconPrefab;  // Pac-Man life icon prefab
+    [SerializeField] private TextMeshProUGUI readyText;
+    [SerializeField] private GameObject livesPanel;
+    [SerializeField] private GameObject lifeIconPrefab;
 
+    private bool gameOver = false;
     public int score { get; private set; } = 0;
     public int lives { get; private set; } = 3;
-
     private int ghostMultiplier = 1;
 
     private void Awake()
@@ -48,13 +49,15 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         gameOverText.enabled = false;
-        readyText.enabled = false; // NEW: Hide "READY!" at start
+        readyText.enabled = false;
+        gameOver = false;
+        UpdateLivesDisplay();
         NewGame();
     }
 
     private void Update()
     {
-        if (lives <= 0 && Input.anyKeyDown)
+        if (gameOver && Input.anyKeyDown)
         {
             NewGame();
         }
@@ -62,6 +65,7 @@ public class GameManager : MonoBehaviour
 
     private void NewGame()
     {
+        gameOver = false;
         gameOverText.enabled = false;
         SetScore(0);
         SetLives(3);
@@ -71,7 +75,7 @@ public class GameManager : MonoBehaviour
     private void NewRound()
     {
         gameOverText.enabled = false;
-        readyText.enabled = true; // NEW: Show "READY!" when round starts
+        readyText.enabled = true; // Show "READY!"
 
         foreach (Transform pellet in pellets)
         {
@@ -80,28 +84,33 @@ public class GameManager : MonoBehaviour
 
         ResetState();
 
-        // Hide "READY!" after 2 seconds and start the game
-        Invoke(nameof(HideReadyText), 2f);
+        Invoke(nameof(HideReadyText), 2f); // Hide "READY!" after 2 seconds
     }
 
     private void HideReadyText()
     {
-        readyText.enabled = false;
+        Debug.Log("Hiding READY! text now."); // Debugging
+        readyText.enabled = false; 
+        readyText.alpha = 0f; // Force hide as backup
     }
 
     private void ResetState()
     {
+        pacman.gameObject.SetActive(true);
+        pacman.ResetState();
+
         foreach (Ghost ghost in ghosts)
         {
+            ghost.gameObject.SetActive(true);
             ghost.ResetState();
         }
-
-        pacman.ResetState();
     }
 
     private void GameOver()
     {
-        StartCoroutine(FadeGameOverText());
+        gameOver = true;
+        gameOverText.enabled = true;
+        StartCoroutine(ReturnToMainMenuAfterDelay());
 
         foreach (Ghost ghost in ghosts)
         {
@@ -127,7 +136,6 @@ public class GameManager : MonoBehaviour
     public void PacmanEaten()
     {
         pacman.DeathSequence();
-
         SetLives(lives - 1);
 
         if (lives > 0)
@@ -180,7 +188,6 @@ public class GameManager : MonoBehaviour
                 return true;
             }
         }
-
         return false;
     }
 
@@ -202,20 +209,20 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private IEnumerator FadeGameOverText()
+    private IEnumerator FlashReadyText()
     {
-        gameOverText.enabled = true;
-        gameOverText.text = "GAME OVER!";
-        gameOverText.alpha = 0f;
-
-        float duration = 1f;
-        float elapsed = 0f;
-
-        while (elapsed < duration)
+        readyText.enabled = true;
+        for (int i = 0; i < 6; i++)
         {
-            elapsed += Time.deltaTime;
-            gameOverText.alpha = Mathf.Lerp(0f, 1f, elapsed / duration);
-            yield return null;
+            readyText.enabled = !readyText.enabled;
+            yield return new WaitForSeconds(0.3f);
         }
+        readyText.enabled = true;
+    }
+
+    private IEnumerator ReturnToMainMenuAfterDelay()
+    {
+        yield return new WaitForSeconds(3f);
+        SceneManager.LoadScene("MainMenu");
     }
 }
