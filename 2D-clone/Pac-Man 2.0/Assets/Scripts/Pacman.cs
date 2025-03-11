@@ -43,10 +43,17 @@ public class Pacman : MonoBehaviour
 
     public void ResetState()
     {
+        Debug.Log("ResetState() called for Pac-Man");
+
+        if (spriteRenderer == null) Debug.LogError("Pac-Man's SpriteRenderer is NULL!");
+        if (circleCollider == null) Debug.LogError("Pac-Man's CircleCollider2D is NULL!");
+        if (deathSequence == null) Debug.LogError("Pac-Man's deathSequence is NULL!");
+        if (movement == null) Debug.LogError("Pac-Man's Movement component is NULL!");
+
         enabled = true;
         spriteRenderer.enabled = true;
         circleCollider.enabled = true;
-        deathSequence.enabled = false;
+        if (deathSequence != null) deathSequence.enabled = false;
         movement.ResetState();
         gameObject.SetActive(true);
     }
