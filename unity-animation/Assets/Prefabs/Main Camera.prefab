@@ -190,6 +190,7 @@ MonoBehaviour:
   minZoom: 5
   maxZoom: 10
   zoomSmoothTime: 0.1
+  isInverted: 0
   enableAutoOrbit: 1
   idleTime: 30
   autoOrbitSpeed: 10
@@ -500,6 +501,7 @@ MonoBehaviour:
   minZoom: 30
   maxZoom: 60
   zoomSmoothTime: 0.1
+  isInverted: 0
   enableAutoOrbit: 1
   idleTime: 30
   autoOrbitSpeed: 0.1

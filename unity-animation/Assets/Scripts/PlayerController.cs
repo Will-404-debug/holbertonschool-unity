@@ -12,31 +12,73 @@ public class PlayerController : MonoBehaviour
     private Vector3 startPosition; // Store the player's starting position
     private float fallThreshold = -10f; // Y-position where the player is considered "falling"
 
+    public Transform cameraTransform; // Reference to the main camera
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         startPosition = transform.position; // Store the starting position
+
+        if (cameraTransform == null)
+        {
+            cameraTransform = Camera.main.transform; // Automatically find the main camera
+        }
     }
 
     void Update()
     {
-        // Get input from WASD keys
+        MovePlayer();
+        HandleJump();
+        CheckFall();
+    }
+
+    private void MovePlayer()
+    {
+        // Get input from WASD or arrow keys
         float moveX = Input.GetAxis("Horizontal");
         float moveZ = Input.GetAxis("Vertical");
 
-        // Create movement vector
-        Vector3 movement = new Vector3(moveX, 0, moveZ) * speed * Time.deltaTime;
+        // Create input movement vector
+        Vector3 inputDirection = new Vector3(moveX, 0, moveZ).normalized;
 
-        // Apply movement
-        transform.Translate(movement, Space.Self);
+        if (inputDirection.magnitude >= 0.1f)
+        {
+            // Get the camera's forward and right vectors
+            Vector3 camForward = cameraTransform.forward;
+            Vector3 camRight = cameraTransform.right;
 
+            // Flatten the vectors so movement is always on the ground plane
+            camForward.y = 0;
+            camRight.y = 0;
+
+            // Normalize to ensure movement speed is consistent in all directions
+            camForward.Normalize();
+            camRight.Normalize();
+
+            // Convert input direction to world space using the camera's orientation
+            Vector3 moveDirection = camForward * inputDirection.z + camRight * inputDirection.x;
+
+            // Move the player
+            transform.position += moveDirection * speed * Time.deltaTime;
+
+            // Rotate the player to face the movement direction
+            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
+        }
+    }
+
+    private void HandleJump()
+    {
         // Jumping logic
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             isGrounded = false;
         }
+    }
 
+    private void CheckFall()
+    {
         // Check if the player has fallen
         if (transform.position.y < fallThreshold)
         {

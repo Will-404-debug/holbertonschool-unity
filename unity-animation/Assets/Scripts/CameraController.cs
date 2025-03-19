@@ -116,24 +116,6 @@ public class CameraController : MonoBehaviour
         freeLookCamera.m_XAxis.Value += mouseX;
         freeLookCamera.m_YAxis.Value = Mathf.Clamp(freeLookCamera.m_YAxis.Value + mouseY, 0f, 1f);
 
-        RotatePlayerToCamera();
-    }
-
-    private void RotatePlayerToCamera()
-    {
-        if (player == null || freeLookCamera == null) return;
-
-        Vector3 cameraForward = freeLookCamera.transform.forward;
-        cameraForward.y = 0;
-
-        if (cameraForward.magnitude <= 0.1f) return;
-
-        Quaternion targetRotation = Quaternion.LookRotation(cameraForward);
-
-        if (Quaternion.Angle(player.rotation, targetRotation) > 1f)
-        {
-            player.rotation = Quaternion.Slerp(player.rotation, targetRotation, Time.deltaTime * playerRotationSpeed);
-        }
     }
 
     private void HandleAutoOrbit()
@@ -155,7 +137,6 @@ public class CameraController : MonoBehaviour
         {
             freeLookCamera.m_XAxis.Value = 0;
             freeLookCamera.m_YAxis.Value = 0.5f;
-            RotatePlayerToCamera();
         }
     }
 }
