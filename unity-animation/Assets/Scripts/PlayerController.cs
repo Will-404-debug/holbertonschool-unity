@@ -9,20 +9,40 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     private bool isGrounded;
 
-    private Vector3 startPosition; // Store the player's starting position
-    private float fallThreshold = -10f; // Y-position where the player is considered "falling"
+    private Vector3 startPosition; 
+    private float fallThreshold = -10f; 
 
-    public Transform cameraTransform; // Reference to the main camera
+    public Transform cameraTransform; 
     private Animator animator;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        animator = GetComponent<Animator>(); // Assign the Animator component
+        
+        // Force re-assign the Animator at runtime
+        animator = GetComponent<Animator>();
+
+        if (animator == null)
+        {
+            animator = GetComponentInChildren<Animator>(); // Try to find it in child objects
+        }
+
+        if (animator == null)
+        {
+            Debug.LogError("❌ ERROR: Animator component is STILL missing at runtime! Check if the Player GameObject has an Animator.");
+        }
+        else
+        {
+            Debug.Log("✅ Animator found and assigned successfully.");
+        }
 
         if (cameraTransform == null)
         {
-            cameraTransform = Camera.main.transform; // Automatically find the main camera
+            cameraTransform = Camera.main?.transform;
+            if (cameraTransform == null)
+            {
+                Debug.LogError("❌ ERROR: No Main Camera found!");
+            }
         }
 
         startPosition = transform.position; // Store the starting position
@@ -37,40 +57,35 @@ public class PlayerController : MonoBehaviour
 
     private void MovePlayer()
     {
-        // Get input from WASD or arrow keys
         float moveX = Input.GetAxis("Horizontal");
         float moveZ = Input.GetAxis("Vertical");
 
-        // Create input movement vector
         Vector3 inputDirection = new Vector3(moveX, 0, moveZ).normalized;
 
         if (inputDirection.magnitude >= 0.1f)
         {
-            // Get the camera's forward and right vectors
             Vector3 camForward = cameraTransform.forward;
             Vector3 camRight = cameraTransform.right;
 
-            // Flatten the vectors so movement is always on the ground plane
             camForward.y = 0;
             camRight.y = 0;
 
-            // Normalize to ensure movement speed is consistent in all directions
             camForward.Normalize();
             camRight.Normalize();
 
-            // Convert input direction to world space using the camera's orientation
             Vector3 moveDirection = camForward * inputDirection.z + camRight * inputDirection.x;
 
-            // Move the player
             transform.position += moveDirection * speed * Time.deltaTime;
 
-            // Rotate the player to face the movement direction
             Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
 
-            animator.SetBool("isRunning", true);
+            if (animator != null)
+            {
+                animator.SetBool("isRunning", true);
+            }
         }
-        else
+        else if (animator != null)
         {
             animator.SetBool("isRunning", false);
         }
@@ -78,19 +93,20 @@ public class PlayerController : MonoBehaviour
 
     private void HandleJump()
     {
-        // Jumping logic
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             isGrounded = false;
 
-            animator.SetBool("isJumping", true);
+            if (animator != null)
+            {
+                animator.SetBool("isJumping", true);
+            }
         }
     }
 
     private void CheckFall()
     {
-        // Check if the player has fallen
         if (transform.position.y < fallThreshold)
         {
             Respawn();
@@ -99,27 +115,34 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        // Check if the player is touching the ground
         if (collision.gameObject.CompareTag("Ground"))
         {
             isGrounded = true;
-            animator.SetBool("isJumping", false);
+            Debug.Log("Player landed! isGrounded set to true.");
 
-            // Check if the player is moving or idle after landing
-            if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
+            if (animator != null)
             {
-                animator.SetBool("isRunning", true);
+                animator.SetBool("isJumping", false);
+
+                if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
+                {
+                    animator.SetBool("isRunning", true);
+                }
+                else
+                {
+                    animator.SetBool("isRunning", false);
+                }
             }
             else
             {
-                animator.SetBool("isRunning", false);
+                Debug.LogError("❌ ERROR: Animator is null in OnCollisionEnter! Check if the Player has an Animator component.");
             }
         }
     }
 
     void Respawn()
     {
-        transform.position = new Vector3(startPosition.x, startPosition.y + 5, startPosition.z); // Respawn above start position
-        rb.velocity = Vector3.zero; // Reset velocity to prevent falling again
+        transform.position = new Vector3(startPosition.x, startPosition.y + 5, startPosition.z);
+        rb.velocity = Vector3.zero; 
     }
 }
