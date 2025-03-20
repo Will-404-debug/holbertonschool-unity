@@ -2272,27 +2272,27 @@ PrefabInstance:
       objectReference: {fileID: 278090441}
     - target: {fileID: 3658275284594003606, guid: bdb8537f66f19bb4086fa376d03c4807, type: 3}
       propertyPath: m_FollowOffset.y
-      value: 1.159311
+      value: 1.994135
       objectReference: {fileID: 0}
     - target: {fileID: 3658275284594003606, guid: bdb8537f66f19bb4086fa376d03c4807, type: 3}
       propertyPath: m_FollowOffset.z
-      value: -4.99667
+      value: -4.910237
       objectReference: {fileID: 0}
     - target: {fileID: 3658275284944787789, guid: bdb8537f66f19bb4086fa376d03c4807, type: 3}
       propertyPath: m_FollowOffset.y
-      value: 1.159311
+      value: 1.994135
       objectReference: {fileID: 0}
     - target: {fileID: 3658275284944787789, guid: bdb8537f66f19bb4086fa376d03c4807, type: 3}
       propertyPath: m_FollowOffset.z
-      value: -4.99667
+      value: -4.910237
       objectReference: {fileID: 0}
     - target: {fileID: 3658275285816443379, guid: bdb8537f66f19bb4086fa376d03c4807, type: 3}
       propertyPath: m_FollowOffset.y
-      value: 1.159311
+      value: 1.994135
       objectReference: {fileID: 0}
     - target: {fileID: 3658275285816443379, guid: bdb8537f66f19bb4086fa376d03c4807, type: 3}
       propertyPath: m_FollowOffset.z
-      value: -4.99667
+      value: -4.910237
       objectReference: {fileID: 0}
     - target: {fileID: 3658275285864890052, guid: bdb8537f66f19bb4086fa376d03c4807, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7309,8 +7309,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7831042450396038576, guid: f3c62e701af51154b915fd0521992104, type: 3}
+      propertyPath: m_Avatar
+      value: 
+      objectReference: {fileID: 9000000, guid: 340a209cbe516f245812794876a04e72, type: 3}
+    - target: {fileID: 7831042450396038576, guid: f3c62e701af51154b915fd0521992104, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8191174653941892375, guid: f3c62e701af51154b915fd0521992104, type: 3}
+      propertyPath: animator
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f3c62e701af51154b915fd0521992104, type: 3}

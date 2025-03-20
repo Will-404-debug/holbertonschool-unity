@@ -13,10 +13,12 @@ public class PlayerController : MonoBehaviour
     private float fallThreshold = -10f; // Y-position where the player is considered "falling"
 
     public Transform cameraTransform; // Reference to the main camera
+    private Animator animator;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>(); // Assign the Animator component
         startPosition = transform.position; // Store the starting position
 
         if (cameraTransform == null)
@@ -64,6 +66,12 @@ public class PlayerController : MonoBehaviour
             // Rotate the player to face the movement direction
             Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
+
+            animator.SetBool("isRunning", true);
+        }
+        else
+        {
+            animator.SetBool("isRunning", false);
         }
     }
 
