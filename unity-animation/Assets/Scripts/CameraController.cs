@@ -26,7 +26,7 @@ public class CameraController : MonoBehaviour
 
     [Header("Auto Orbit Settings")]
     public bool enableAutoOrbit = true;
-    public float idleTime = 5f;
+    public float idleTime = 50f;
     public float autoOrbitSpeed = 0.2f;
 
     private float lastInputTime;

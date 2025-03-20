@@ -19,12 +19,13 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>(); // Assign the Animator component
-        startPosition = transform.position; // Store the starting position
 
         if (cameraTransform == null)
         {
             cameraTransform = Camera.main.transform; // Automatically find the main camera
         }
+
+        startPosition = transform.position; // Store the starting position
     }
 
     void Update()
@@ -82,6 +83,8 @@ public class PlayerController : MonoBehaviour
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             isGrounded = false;
+
+            animator.SetBool("isJumping", true);
         }
     }
 
@@ -100,6 +103,17 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground"))
         {
             isGrounded = true;
+            animator.SetBool("isJumping", false);
+
+            // Check if the player is moving or idle after landing
+            if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
+            {
+                animator.SetBool("isRunning", true);
+            }
+            else
+            {
+                animator.SetBool("isRunning", false);
+            }
         }
     }
 
