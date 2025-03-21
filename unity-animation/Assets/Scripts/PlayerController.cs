@@ -42,6 +42,16 @@ public class PlayerController : MonoBehaviour
         MovePlayer();
         HandleJump();
         CheckFall();
+
+        // Set isFalling to true when airborne and not grounded
+        if (!isGrounded && rb.velocity.y < -0.1f && !animator.GetBool("isJumping"))
+        {
+            animator?.SetBool("isFalling", true);
+        }
+        else if (isGrounded)
+        {
+            animator?.SetBool("isFalling", false);
+        }
     }
 
     void MovePlayer()
@@ -89,12 +99,31 @@ public class PlayerController : MonoBehaviour
         rb.velocity = Vector3.zero;
     }
 
+    void CheckGroundStatus()
+    {
+        bool wasGrounded = isGrounded;
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, 0.3f, LayerMask.GetMask("Ground"));
+
+        if (!wasGrounded && isGrounded)
+        {
+            Debug.Log("✅ Landed!");
+            animator?.SetBool("isJumping", false);
+            animator?.SetBool("isFalling", false);
+
+            bool isMoving = Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0;
+            animator?.SetBool("isRunning", isMoving);
+        }
+    }
+
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
             isGrounded = true;
             Debug.Log("Player landed!");
+
+            animator?.SetBool("isJumping", false);
+            animator?.SetBool("isFalling", false);
 
             if (animator != null)
             {
