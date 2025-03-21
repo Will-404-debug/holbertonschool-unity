@@ -119,6 +119,10 @@ MonoBehaviour:
   speed: 6
   jumpForce: 6
   cameraTransform: {fileID: 0}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  groundCheckDistance: 0.3
 --- !u!114 &6214190279981572396
 MonoBehaviour:
   m_ObjectHideFlags: 0

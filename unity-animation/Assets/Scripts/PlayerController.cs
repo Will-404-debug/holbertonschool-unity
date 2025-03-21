@@ -16,6 +16,10 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
 
     private bool isGrounded;
+    private bool wasGroundedLastFrame;
+    
+    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private float groundCheckDistance = 0.3f;
 
     void Start()
     {
@@ -39,18 +43,18 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        CheckGroundStatus();
         MovePlayer();
         HandleJump();
         CheckFall();
 
-        // Set isFalling to true when airborne and not grounded
-        if (!isGrounded && rb.velocity.y < -0.1f && !animator.GetBool("isJumping"))
+        // Falling detection
+        if (!isGrounded && rb.velocity.y < -0.1f)
         {
             animator?.SetBool("isFalling", true);
-        }
-        else if (isGrounded)
-        {
-            animator?.SetBool("isFalling", false);
+            animator?.SetBool("isJumping", false);
+            animator?.SetBool("isRunning", false);
+            animator?.SetBool("isIdle", false);
         }
     }
 
@@ -81,56 +85,56 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            isGrounded = false;
+            rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
+
             animator?.SetBool("isJumping", true);
+            animator?.SetBool("isFalling", false);
         }
     }
 
     void CheckFall()
     {
         if (transform.position.y < fallThreshold)
+        {
             Respawn();
+        }
     }
+
+    void CheckGroundStatus()
+    {
+        wasGroundedLastFrame = isGrounded;
+
+        Vector3 rayOrigin = transform.position + Vector3.up * 0.1f;
+        float checkDistance = groundCheckDistance;
+
+        Ray ray = new Ray(rayOrigin, Vector3.down);
+        isGrounded = Physics.Raycast(ray, out RaycastHit hit, checkDistance, groundLayer);
+
+        Debug.DrawRay(rayOrigin, Vector3.down * checkDistance, isGrounded ? Color.green : Color.red);
+
+        if (!wasGroundedLastFrame && isGrounded)
+        {
+            Debug.Log("✅ Player LANDED on: " + hit.collider.gameObject.name);
+            
+            animator?.SetBool("isJumping", false);
+            animator?.SetBool("isFalling", false);
+
+            // Determine if the player is still moving
+            bool isMoving = Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0;
+            animator?.SetBool("isRunning", isMoving);
+            animator?.SetBool("isIdle", !isMoving);
+        }
+    }
+
 
     void Respawn()
     {
         transform.position = startPosition + Vector3.up * 5;
         rb.velocity = Vector3.zero;
-    }
-
-    void CheckGroundStatus()
-    {
-        bool wasGrounded = isGrounded;
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, 0.3f, LayerMask.GetMask("Ground"));
-
-        if (!wasGrounded && isGrounded)
-        {
-            Debug.Log("✅ Landed!");
-            animator?.SetBool("isJumping", false);
-            animator?.SetBool("isFalling", false);
-
-            bool isMoving = Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0;
-            animator?.SetBool("isRunning", isMoving);
-        }
-    }
-
-    void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            isGrounded = true;
-            Debug.Log("Player landed!");
-
-            animator?.SetBool("isJumping", false);
-            animator?.SetBool("isFalling", false);
-
-            if (animator != null)
-            {
-                animator.SetBool("isJumping", false);
-                bool isMoving = Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0;
-                animator.SetBool("isRunning", isMoving);
-            }
-        }
+        
+        animator?.SetBool("isJumping", false);
+        animator?.SetBool("isFalling", false);
+        animator?.SetBool("isRunning", false);
+        animator?.SetBool("isIdle", true);
     }
 }
