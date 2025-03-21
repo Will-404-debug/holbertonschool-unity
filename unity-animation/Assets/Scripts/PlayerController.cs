@@ -83,7 +83,7 @@ public class PlayerController : MonoBehaviour
 
     void HandleJump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        if (Input.GetKeyDown(KeyCode.Space)) //&& isGrounded
         {
             rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
 
