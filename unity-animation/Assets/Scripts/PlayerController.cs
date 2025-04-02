@@ -127,6 +127,12 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log($"✅ Player LANDED on: {hit.collider.gameObject.name}");
 
+            // Trigger landing impact animation only if falling was active
+            if (animator.GetBool("isFalling"))
+            {
+                animator.SetTrigger("hasLanded");
+            }
+            
             // Reset animation states
             animator?.SetBool("isJumping", false);
             animator?.SetBool("isFalling", false);
