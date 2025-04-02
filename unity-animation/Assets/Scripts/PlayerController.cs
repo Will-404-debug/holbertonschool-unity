@@ -127,8 +127,9 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log($"✅ Player LANDED on: {hit.collider.gameObject.name}");
 
-            // Trigger landing impact animation only if falling was active
             float distance = Vector3.Distance(transform.position, startPosition);
+
+            // Trigger landing impact animation only if falling was active
             if (animator.GetBool("isFalling") && distance < 1f)
             {
                 animator.SetTrigger("hasLanded");
