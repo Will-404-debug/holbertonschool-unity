@@ -116,18 +116,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1256b673f7d6b3a42b31b3de4a30b893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveSpeed: 10
-  JumpForce: 5
-  RotationSpeed: 10
-  _rb: {fileID: 7415136780747447822}
-  _groundCheck: {fileID: 9052481466588952002}
-  _respawnPoint: {fileID: 0}
-  _trailRenderer: {fileID: 0}
-  _animator: {fileID: 1338272883831918378}
-  _groundCheckRadius: 0.3
-  _groundLayer:
+  speed: 5
+  jumpForce: 7
+  cameraTransform: {fileID: 0}
+  groundLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
+  groundCheckDistance: 1.2
 --- !u!114 &6214190279981572396
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -258,20 +253,14 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: d2884e66508f43449baaab18d0f45eb2, type: 2}
+    - target: {fileID: 5866666021909216657, guid: 340a209cbe516f245812794876a04e72, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 340a209cbe516f245812794876a04e72, type: 3}
---- !u!95 &1338272883831918378 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 340a209cbe516f245812794876a04e72, type: 3}
-  m_PrefabInstance: {fileID: 4897688445097767611}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4932194535845074256 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 340a209cbe516f245812794876a04e72, type: 3}
-  m_PrefabInstance: {fileID: 4897688445097767611}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &9052481466588952002 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -4730808896745044103, guid: 340a209cbe516f245812794876a04e72, type: 3}
   m_PrefabInstance: {fileID: 4897688445097767611}
   m_PrefabAsset: {fileID: 0}

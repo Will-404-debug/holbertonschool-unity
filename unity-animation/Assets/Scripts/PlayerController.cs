@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour
     private bool wasGroundedLastFrame;
     
     [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private float groundCheckDistance = 0.3f;
+    [SerializeField] private float groundCheckDistance = 1.2f;
 
     void Start()
     {
@@ -47,15 +47,23 @@ public class PlayerController : MonoBehaviour
         MovePlayer();
         HandleJump();
         CheckFall();
+        HandleFalling();
 
-        // Falling detection
-        if (!isGrounded && rb.velocity.y < -0.1f)
+        /*// Falling detection
+        if (!isGrounded && rb.velocity.y < -1.0f)
         {
+            if (!animator.GetBool("isFalling"))
+                Debug.Log("🔻 Player is falling!");
+
             animator?.SetBool("isFalling", true);
             animator?.SetBool("isJumping", false);
             animator?.SetBool("isRunning", false);
             animator?.SetBool("isIdle", false);
         }
+        */
+        
+        Debug.Log($"isGrounded: {isGrounded}, velocityY: {rb.velocity.y}");
+
     }
 
     void MovePlayer()
@@ -83,7 +91,7 @@ public class PlayerController : MonoBehaviour
 
     void HandleJump()
     {
-        if (Input.GetKeyDown(KeyCode.Space)) //&& isGrounded
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
 
@@ -91,6 +99,7 @@ public class PlayerController : MonoBehaviour
             animator?.SetBool("isFalling", false);
         }
     }
+
 
     void CheckFall()
     {
@@ -104,28 +113,65 @@ public class PlayerController : MonoBehaviour
     {
         wasGroundedLastFrame = isGrounded;
 
+        // Start the ground check just slightly above the player's feet
         Vector3 rayOrigin = transform.position + Vector3.up * 0.1f;
-        float checkDistance = groundCheckDistance;
+        float checkDistance = groundCheckDistance + 0.2f; // slightly longer than radius for reliability
 
-        Ray ray = new Ray(rayOrigin, Vector3.down);
-        isGrounded = Physics.Raycast(ray, out RaycastHit hit, checkDistance, groundLayer);
+        // SphereCast for more reliable ground detection
+        isGrounded = Physics.SphereCast(rayOrigin, 0.2f, Vector3.down, out RaycastHit hit, checkDistance, groundLayer);
 
+        // Draw debug line
         Debug.DrawRay(rayOrigin, Vector3.down * checkDistance, isGrounded ? Color.green : Color.red);
 
         if (!wasGroundedLastFrame && isGrounded)
         {
-            Debug.Log("✅ Player LANDED on: " + hit.collider.gameObject.name);
-            
+            Debug.Log($"✅ Player LANDED on: {hit.collider.gameObject.name}");
+
+            // Reset animation states
             animator?.SetBool("isJumping", false);
             animator?.SetBool("isFalling", false);
 
-            // Determine if the player is still moving
+            // Determine movement
             bool isMoving = Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0;
             animator?.SetBool("isRunning", isMoving);
             animator?.SetBool("isIdle", !isMoving);
         }
     }
 
+
+    void HandleFalling()
+    {
+        if (animator == null) return;
+
+        // Only trigger falling if the player is in the air and going down
+        if (!isGrounded && rb.velocity.y < -10f)
+        {
+            if (!animator.GetBool("isFalling"))
+                Debug.Log("🔻 Falling...");
+
+            animator.SetBool("isFalling", true);
+            animator.SetBool("isJumping", false);
+            animator.SetBool("isRunning", false);
+            animator.SetBool("isIdle", false);
+        }
+        // If player is grounded, disable falling
+        else if (isGrounded)
+        {
+            animator.SetBool("isFalling", false);
+
+            bool isMoving = Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0;
+            animator.SetBool("isRunning", isMoving);
+            animator.SetBool("isIdle", !isMoving);
+        }
+        // Optional: rising in the air after jump
+        else if (!isGrounded && rb.velocity.y > 0.1f)
+        {
+            animator.SetBool("isJumping", true);
+            animator.SetBool("isFalling", false);
+            animator.SetBool("isRunning", false);
+            animator.SetBool("isIdle", false);
+        }
+    }
 
     void Respawn()
     {
