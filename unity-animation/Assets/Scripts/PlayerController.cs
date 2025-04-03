@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
@@ -17,7 +18,8 @@ public class PlayerController : MonoBehaviour
 
     private bool isGrounded;
     private bool wasGroundedLastFrame;
-    
+    private bool isLandingTriggered = false;
+
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float groundCheckDistance = 1.2f;
 
@@ -49,21 +51,7 @@ public class PlayerController : MonoBehaviour
         CheckFall();
         HandleFalling();
 
-        /*// Falling detection
-        if (!isGrounded && rb.velocity.y < -1.0f)
-        {
-            if (!animator.GetBool("isFalling"))
-                Debug.Log("🔻 Player is falling!");
-
-            animator?.SetBool("isFalling", true);
-            animator?.SetBool("isJumping", false);
-            animator?.SetBool("isRunning", false);
-            animator?.SetBool("isIdle", false);
-        }
-        */
-        
         Debug.Log($"isGrounded: {isGrounded}, velocityY: {rb.velocity.y}");
-
     }
 
     void MovePlayer()
@@ -100,7 +88,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
     void CheckFall()
     {
         if (transform.position.y < fallThreshold)
@@ -113,14 +100,11 @@ public class PlayerController : MonoBehaviour
     {
         wasGroundedLastFrame = isGrounded;
 
-        // Start the ground check just slightly above the player's feet
         Vector3 rayOrigin = transform.position + Vector3.up * 0.1f;
-        float checkDistance = groundCheckDistance + 0.2f; // slightly longer than radius for reliability
+        float checkDistance = groundCheckDistance + 0.2f;
 
-        // SphereCast for more reliable ground detection
         isGrounded = Physics.SphereCast(rayOrigin, 0.2f, Vector3.down, out RaycastHit hit, checkDistance, groundLayer);
 
-        // Draw debug line
         Debug.DrawRay(rayOrigin, Vector3.down * checkDistance, isGrounded ? Color.green : Color.red);
 
         if (!wasGroundedLastFrame && isGrounded)
@@ -129,29 +113,25 @@ public class PlayerController : MonoBehaviour
 
             float distance = Vector3.Distance(transform.position, startPosition);
 
-            // Trigger landing impact animation only if falling was active
             if (animator.GetBool("isFalling") && distance < 1f)
             {
-                animator.SetTrigger("hasLanded");
+                Debug.Log("💥 Coroutine: Triggering Falling Flat Impact");
+                StartCoroutine(PlayLandingImpact());
             }
 
-            // Reset animation states
             animator?.SetBool("isJumping", false);
             animator?.SetBool("isFalling", false);
 
-            // Determine movement
             bool isMoving = Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0;
             animator?.SetBool("isRunning", isMoving);
             animator?.SetBool("isIdle", !isMoving);
         }
     }
 
-
     void HandleFalling()
     {
         if (animator == null) return;
 
-        // Only trigger falling if the player is in the air and going down
         if (!isGrounded && rb.velocity.y < -10f)
         {
             if (!animator.GetBool("isFalling"))
@@ -162,7 +142,6 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("isRunning", false);
             animator.SetBool("isIdle", false);
         }
-        // If player is grounded, disable falling
         else if (isGrounded)
         {
             animator.SetBool("isFalling", false);
@@ -171,7 +150,6 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("isRunning", isMoving);
             animator.SetBool("isIdle", !isMoving);
         }
-        // Optional: rising in the air after jump
         else if (!isGrounded && rb.velocity.y > 0.1f)
         {
             animator.SetBool("isJumping", true);
@@ -185,10 +163,26 @@ public class PlayerController : MonoBehaviour
     {
         transform.position = startPosition + Vector3.up * 5;
         rb.velocity = Vector3.zero;
-        
+
         animator?.SetBool("isJumping", false);
         animator?.SetBool("isFalling", false);
         animator?.SetBool("isRunning", false);
         animator?.SetBool("isIdle", true);
+    }
+
+    // ✅ Coroutine for landing impact
+    IEnumerator PlayLandingImpact()
+    {
+        if (isLandingTriggered) yield break;
+
+        isLandingTriggered = true;
+
+        yield return new WaitForEndOfFrame(); // wait one frame
+
+        animator.SetTrigger("hasLanded");
+
+        yield return new WaitForSeconds(1.0f); // adjust duration to match your animation length
+
+        isLandingTriggered = false;
     }
 }
