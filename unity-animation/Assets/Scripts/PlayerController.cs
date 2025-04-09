@@ -113,7 +113,7 @@ public class PlayerController : MonoBehaviour
 
             float distance = Vector3.Distance(transform.position, startPosition);
 
-            if (animator.GetBool("isFalling") && distance < 1f)
+            if (/**animator.GetBool("isFalling") &&**/ distance < 1f)
             {
                 Debug.Log("💥 Coroutine: Triggering Falling Flat Impact");
                 StartCoroutine(PlayLandingImpact());
@@ -132,7 +132,7 @@ public class PlayerController : MonoBehaviour
     {
         if (animator == null) return;
 
-        if (!isGrounded && rb.velocity.y < -10f)
+        /**if (!isGrounded && rb.velocity.y < -10f)
         {
             if (!animator.GetBool("isFalling"))
                 Debug.Log("🔻 Falling...");
@@ -141,7 +141,7 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("isJumping", false);
             animator.SetBool("isRunning", false);
             animator.SetBool("isIdle", false);
-        }
+        }**/
         else if (isGrounded)
         {
             animator.SetBool("isFalling", false);
@@ -165,7 +165,7 @@ public class PlayerController : MonoBehaviour
         rb.velocity = Vector3.zero;
 
         animator?.SetBool("isJumping", false);
-        animator?.SetBool("isFalling", false);
+        animator?.SetBool("isFalling", true);
         animator?.SetBool("isRunning", false);
         animator?.SetBool("isIdle", true);
     }
