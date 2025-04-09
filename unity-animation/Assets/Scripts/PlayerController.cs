@@ -82,7 +82,6 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
-
             animator?.SetBool("isJumping", true);
             animator?.SetBool("isFalling", false);
         }
@@ -110,14 +109,9 @@ public class PlayerController : MonoBehaviour
         if (!wasGroundedLastFrame && isGrounded)
         {
             Debug.Log($"✅ Player LANDED on: {hit.collider.gameObject.name}");
-
-            float distance = Vector3.Distance(transform.position, startPosition);
-
-            if (/**animator.GetBool("isFalling") &&**/ distance < 1f)
-            {
-                Debug.Log("💥 Coroutine: Triggering Falling Flat Impact");
-                StartCoroutine(PlayLandingImpact());
-            }
+            
+            // Always trigger impact sequence on landing
+            StartCoroutine(PlayLandingImpact());
 
             animator?.SetBool("isJumping", false);
             animator?.SetBool("isFalling", false);
@@ -132,16 +126,6 @@ public class PlayerController : MonoBehaviour
     {
         if (animator == null) return;
 
-        /**if (!isGrounded && rb.velocity.y < -10f)
-        {
-            if (!animator.GetBool("isFalling"))
-                Debug.Log("🔻 Falling...");
-
-            animator.SetBool("isFalling", true);
-            animator.SetBool("isJumping", false);
-            animator.SetBool("isRunning", false);
-            animator.SetBool("isIdle", false);
-        }**/
         else if (isGrounded)
         {
             animator.SetBool("isFalling", false);
@@ -164,24 +148,32 @@ public class PlayerController : MonoBehaviour
         transform.position = startPosition + Vector3.up * 5;
         rb.velocity = Vector3.zero;
 
+        animator?.ResetTrigger("hasLanded");
+        animator?.ResetTrigger("getUp");
+
         animator?.SetBool("isJumping", false);
         animator?.SetBool("isFalling", true);
         animator?.SetBool("isRunning", false);
-        animator?.SetBool("isIdle", true);
+        animator?.SetBool("isIdle", false);
     }
 
-    // ✅ Coroutine for landing impact
     IEnumerator PlayLandingImpact()
     {
         if (isLandingTriggered) yield break;
-
         isLandingTriggered = true;
 
-        yield return new WaitForEndOfFrame(); // wait one frame
+        yield return new WaitForEndOfFrame();
 
-        animator.SetTrigger("hasLanded");
+        animator.SetTrigger("hasLanded"); // plays Falling Flat Impact
+        yield return new WaitForSeconds(1.0f); // match clip timing
 
-        yield return new WaitForSeconds(1.0f); // adjust duration to match your animation length
+        animator.SetTrigger("getUp"); // plays Getting Up
+        yield return new WaitForSeconds(1.2f); // match clip timing
+
+        animator.SetBool("isIdle", true);
+        animator.SetBool("isFalling", false);
+        animator.SetBool("isRunning", false);
+        animator.SetBool("isJumping", false);
 
         isLandingTriggered = false;
     }
