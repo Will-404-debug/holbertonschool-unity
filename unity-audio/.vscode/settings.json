@@ -51,5 +51,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "unity-animation.sln"
+    "dotnet.defaultSolution": "unity-audio.sln"
 }
