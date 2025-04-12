@@ -6,6 +6,7 @@ public class WinTrigger : MonoBehaviour
     public GameObject winCanvas; // Reference to WinCanvas
     public TextMeshProUGUI finalTimeText; // Reference to FinalTime UI in WinCanvas
     public GameObject timerCanvas; // Reference to Timer Canvas
+    public AudioSource victoryAudioSource; // Reference to VictoryPiano AudioSource
 
     private void OnTriggerEnter(Collider other)
     {
@@ -23,6 +24,17 @@ public class WinTrigger : MonoBehaviour
             else
             {
                 Debug.LogWarning("⚠️ BGM Controller not found.");
+            }
+
+            // ▶️ Play Victory Sting
+            if (victoryAudioSource != null)
+            {
+                victoryAudioSource.Play();
+                Debug.Log("🎹 Victory sting played.");
+            }
+            else
+            {
+                Debug.LogWarning("⚠️ Victory AudioSource not assigned in Inspector.");
             }
 
             // Display Win Canvas
