@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 7415136780747447822}
   - component: {fileID: 4083903864955111365}
   - component: {fileID: 7831042450396038576}
+  - component: {fileID: 4938934695694893682}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -186,6 +187,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &4938934695694893682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6475079812337921389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f867de7fee1bdb4aa65425bccbd592f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioSource: {fileID: 0}
+  grassClip: {fileID: 0}
+  rockClip: {fileID: 0}
 --- !u!1001 &4897688445097767611
 PrefabInstance:
   m_ObjectHideFlags: 0
