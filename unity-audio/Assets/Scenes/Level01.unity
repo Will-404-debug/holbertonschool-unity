@@ -8008,14 +8008,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1071841410}
     - target: {fileID: 4938934695694893682, guid: f3c62e701af51154b915fd0521992104, type: 3}
-      propertyPath: rockClip
-      value: 
-      objectReference: {fileID: 8300000, guid: 8f69b1d6f4136d842a122d483d6bcbcc, type: 3}
-    - target: {fileID: 4938934695694893682, guid: f3c62e701af51154b915fd0521992104, type: 3}
-      propertyPath: grassClip
-      value: 
-      objectReference: {fileID: 8300000, guid: 051ed4435409a4342a9a46cf45969620, type: 3}
-    - target: {fileID: 4938934695694893682, guid: f3c62e701af51154b915fd0521992104, type: 3}
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 711285009}
