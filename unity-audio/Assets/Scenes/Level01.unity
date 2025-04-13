@@ -1631,6 +1631,9 @@ MonoBehaviour:
   restartButton: {fileID: 329366760}
   menuButton: {fileID: 733822816}
   optionsButton: {fileID: 1237270893}
+  audioMixer: {fileID: 24100000, guid: a5459a4bb32b0df4c990d73cf50e3fc6, type: 2}
+  normalSnapshot: {fileID: -4619543204230031989, guid: a5459a4bb32b0df4c990d73cf50e3fc6, type: 2}
+  pausedSnapshot: {fileID: 3363380514040102420, guid: a5459a4bb32b0df4c990d73cf50e3fc6, type: 2}
 --- !u!4 &392579158
 Transform:
   m_ObjectHideFlags: 0
@@ -2548,27 +2551,27 @@ PrefabInstance:
       objectReference: {fileID: 278090441}
     - target: {fileID: 3658275284594003606, guid: bdb8537f66f19bb4086fa376d03c4807, type: 3}
       propertyPath: m_FollowOffset.y
-      value: 0.5311737
+      value: 1.288067
       objectReference: {fileID: 0}
     - target: {fileID: 3658275284594003606, guid: bdb8537f66f19bb4086fa376d03c4807, type: 3}
       propertyPath: m_FollowOffset.z
-      value: -4.962996
+      value: -4.989857
       objectReference: {fileID: 0}
     - target: {fileID: 3658275284944787789, guid: bdb8537f66f19bb4086fa376d03c4807, type: 3}
       propertyPath: m_FollowOffset.y
-      value: 0.5311737
+      value: 1.288067
       objectReference: {fileID: 0}
     - target: {fileID: 3658275284944787789, guid: bdb8537f66f19bb4086fa376d03c4807, type: 3}
       propertyPath: m_FollowOffset.z
-      value: -4.962996
+      value: -4.989857
       objectReference: {fileID: 0}
     - target: {fileID: 3658275285816443379, guid: bdb8537f66f19bb4086fa376d03c4807, type: 3}
       propertyPath: m_FollowOffset.y
-      value: 0.5311737
+      value: 1.288067
       objectReference: {fileID: 0}
     - target: {fileID: 3658275285816443379, guid: bdb8537f66f19bb4086fa376d03c4807, type: 3}
       propertyPath: m_FollowOffset.z
-      value: -4.962996
+      value: -4.989857
       objectReference: {fileID: 0}
     - target: {fileID: 3658275285864890052, guid: bdb8537f66f19bb4086fa376d03c4807, type: 3}
       propertyPath: m_LocalPosition.x

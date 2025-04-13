@@ -2,12 +2,16 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+using UnityEngine.Audio;
 
 public class PauseMenu : MonoBehaviour
 {
     public GameObject pauseMenuUI; // Reference to Pause Menu UI Canvas
     public Button resumeButton, restartButton, menuButton, optionsButton; // UI Buttons
     public static bool isPaused = false; // Track if the game is paused
+    public AudioMixer audioMixer;
+    public AudioMixerSnapshot normalSnapshot;
+    public AudioMixerSnapshot pausedSnapshot;
 
     void Start()
     {
@@ -36,6 +40,9 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 0f; // Freeze game time
         isPaused = true;
         EventSystem.current.SetSelectedGameObject(resumeButton.gameObject); // Select Resume button for keyboard/controller users
+
+        if (pausedSnapshot != null)
+            pausedSnapshot.TransitionTo(0.5f);
     }
 
     public void Options()
@@ -52,6 +59,9 @@ public class PauseMenu : MonoBehaviour
         pauseMenuUI.SetActive(false); // Hide Pause Menu
         Time.timeScale = 1f; // Resume game time
         isPaused = false;
+
+        if (normalSnapshot != null)
+            normalSnapshot.TransitionTo(0.5f);
     }
 
     public void Restart()
