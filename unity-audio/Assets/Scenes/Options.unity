@@ -1477,6 +1477,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   invertYToggle: {fileID: 0}
   applyButton: {fileID: 0}
+  bgmSlider: {fileID: 0}
+  sfxSlider: {fileID: 0}
+  audioMixer: {fileID: 0}
 --- !u!1 &1260876000
 GameObject:
   m_ObjectHideFlags: 0
@@ -1813,6 +1816,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   invertYToggle: {fileID: 119878050}
   applyButton: {fileID: 1670535174}
+  bgmSlider: {fileID: 1047981690}
+  sfxSlider: {fileID: 341129553}
+  audioMixer: {fileID: 24100000, guid: a5459a4bb32b0df4c990d73cf50e3fc6, type: 2}
 --- !u!4 &1417428629
 Transform:
   m_ObjectHideFlags: 0
