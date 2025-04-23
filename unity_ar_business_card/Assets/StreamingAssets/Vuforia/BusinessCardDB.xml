@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QCARConfig>
+  <Tracking>
+    <ImageTarget name="logo_ar_card" size="20.000000 20.000000" />
+  </Tracking>
+</QCARConfig>
