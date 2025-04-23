@@ -3,6 +3,8 @@ using Vuforia;
 
 public class HideOnLost : MonoBehaviour
 {
+    private Animator animator;
+    
     void Start()
     {
         var observer = GetComponent<ObserverBehaviour>();
@@ -10,6 +12,9 @@ public class HideOnLost : MonoBehaviour
         {
             observer.OnTargetStatusChanged += OnTargetStatusChanged;
         }
+        
+        // Get the Animator from this GameObject or its children
+        animator = GetComponentInChildren<Animator>();
     }
 
     private void OnTargetStatusChanged(ObserverBehaviour behaviour, TargetStatus status)
@@ -18,6 +23,12 @@ public class HideOnLost : MonoBehaviour
         foreach (Transform child in transform)
         {
             child.gameObject.SetActive(isTracked);
+        }
+
+        // Play animation only when tracked
+        if (isTracked && animator != null)
+        {
+            animator.SetTrigger("Show");
         }
     }
 }
