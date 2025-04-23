@@ -59,3 +59,10 @@ sysinfo.txt
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# Ignore large Unity packages
+*.unitypackage
+*.tgz
+unity_ar_business_card/BusinessCardDB.unitypackage
+unity_ar_business_card/Packages/com.ptc.vuforia.engine-11.1.3.tgz
+unity_ar_business_card/add-vuforia-package-11-1-3.unitypackage
