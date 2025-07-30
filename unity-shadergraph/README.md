@@ -1,33 +1,66 @@
 # Unity-Shadergraph
 
-This project focuses on learning and applying **Unity’s ShaderGraph** to create custom shaders and visual effects in Unity. You will explore rendering concepts and build visual effects such as glowing materials, water, pixelated shaders, and more. The goal is to make your shaders visually identifiable to non-technical viewers while demonstrating a solid understanding of Unity’s rendering pipeline and ShaderGraph.
+This project focuses on learning and applying **Unity’s ShaderGraph** to create custom shaders and visual effects in Unity. You will explore rendering concepts and build visually distinctive shaders like glowing effects, holograms, animated water, dissolves, and more. These shaders are designed to be **visually identifiable by non-technical users**, while showcasing deep understanding of Unity’s rendering pipeline.
 
-## Objectives
+---
+
+## ✨ Objectives
 
 By the end of this project, you will be able to:
 
 - Explain the concepts of **rendering**, **render pipelines**, and **shaders**.
-- Describe the purpose and usage of **Unity’s Scriptable Render Pipeline (SRP)**.
-- Set up a Unity project using **ShaderGraph**.
-- Differentiate between **surface**, **vertex**, and **fragment** shaders.
-- Understand **UV mapping** and **vertex animation**.
-- Design and implement visual shaders with creative control over style (realistic, cartoon, pixelated, etc.).
+- Describe how Unity’s **Scriptable Render Pipeline (SRP)** enables ShaderGraph.
+- Implement both **fragment and vertex** stage logic in shaders.
+- Create visual effects using:
+  - **Glow/Emission**
+  - **Pulsing animation**
+  - **Disintegration/Dissolve**
+  - **Holographic flicker**
+  - **Water with sine wave motion**
+- Utilize **UVs**, **world position**, **time**, **noise**, and **math nodes** creatively.
+- Animate **mesh geometry** using **vertex displacement**.
 
-## Project Structure
+---
 
-- All shaders are created using **ShaderGraph**.
-- Shaders are applied to **GameObjects** for evaluation.
-- Final submission includes an **exported Asset package** of your shaders.
+## 🧱 Project Structure
+
+- All shaders use Unity’s **ShaderGraph** in the **Universal Render Pipeline (URP)**.
+- Shaders are assigned to **GameObjects** for demonstration and review.
+- Each shader is **visually distinct and labeled**.
+- All shaders are exported as a **Unity Asset package**.
 - No final game build is required.
 
-## Requirements
+---
+
+## ✅ Key Shader Implementations
+
+| Shader Name     | Description                                               |
+|------------------|-----------------------------------------------------------|
+| `Glow Up`        | Emits light with HDR base color + pulsing logic           |
+| `Pulse`          | Color intensifies with sine over time                     |
+| `Mr. Stark`      | Dissolve effect using noise, edge highlight, and alpha    |
+| `Iceman`         | Transparent ice effect with distortion and color tinting  |
+| `Cortana`        | Flickering hologram using UV + sine + texture modulation  |
+| `Sine of the Sea`| Water shader with:                                        |
+|                  | • Color depth blend (shallow/deep)                        |
+|                  | • Foam crest detection using Simple Noise                 |
+|                  | • **Fresnel edge glow**                                   |
+|                  | • **Vertex displacement using sine**                      |
+|                  | • Animated surface that moves with time                   |
+
+---
+
+## 🧰 Requirements
 
 - Unity version **2022 LTS or later**
-- Use **ShaderGraph** for all shader creation.
-- A recognizable visual result for each shader (e.g., clearly looks like water or glow).
-- Include a `README.md` file (this one) at the root of the project.
-- Use Unity’s default **.gitignore** file.
-- Push the entire `unity-shaders` folder to your Git repository.
+- Use **URP** and **ShaderGraph** (no HLSL hand-coding)
+- All shaders must produce a **visibly recognizable result**
+- Shaders should be customizable via **Inspector properties**
+- Include this `README.md` in your repo
+- Use Unity’s default `.gitignore`
+- Push the entire project folder to your GitHub repository
+
+---
 
 ## 📚 References
 
@@ -37,18 +70,21 @@ By the end of this project, you will be able to:
 - [Shaders Case Studies](https://www.youtube.com/playlist?list=PLJ4rOFLQFH4C0zPBu-fgFKMvrHadY6dhm)
 
 ### Read:
-- [A Gentle Introduction to Shaders](https://learn.unity.com/tutorial/rendering-and-shading)
+- [Unity Learn - Shading](https://learn.unity.com/tutorial/rendering-and-shading)
 - [ShaderGraph Documentation](https://docs.unity3d.com/Packages/com.unity.shadergraph@latest/)
-- [Unity Manual: Rendering Pipeline](https://docs.unity3d.com/Manual/rendering.html)
-- [Unity Manual: Asset Packages](https://docs.unity3d.com/Manual/AssetPackages.html)
-- [Unity Manual: Material Charts](https://docs.unity3d.com/Manual/StandardShaderMaterialCharts.html)
+- [URP Manual](https://docs.unity3d.com/Manual/universalrp-overview.html)
+- [Asset Packages](https://docs.unity3d.com/Manual/AssetPackages.html)
+
+---
 
 ## 📦 Deliverables
 
-- Shaders implemented using ShaderGraph
-- Exported **Asset package** of shaders for review
-- `README.md` and proper `.gitignore` file
-- Entire Unity project pushed to the `unity-shaders` repo
+- ✅ Fully functional shaders built with ShaderGraph
+- ✅ Exported `.unitypackage` with all shader assets
+- ✅ Unity project in version-controlled repository
+- ✅ This updated `README.md`
+
+---
 
 ## 👤 Author
 
@@ -56,4 +92,5 @@ By the end of this project, you will be able to:
 
 ---
 
-Happy shading! 🎨
+Happy shading! 🎨✨  
+Let your pixels move and glow!
