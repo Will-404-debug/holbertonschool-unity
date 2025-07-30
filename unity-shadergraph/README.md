@@ -50,6 +50,7 @@ By the end of this project, you will be able to:
 
 ## Key Commands
 To activate the animation for `Mr. Stark` press `spacebar` and to reset press `r`.
+
 ---
 
 ## 🧰 Requirements
